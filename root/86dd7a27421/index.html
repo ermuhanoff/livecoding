@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="/static/style/style.css">
+      <title>Summary</title>
+  </head>
+
+  <body>
+    <main id="main">
+        <article id="article">
+            <h1 class="h1">Summary</h1>
+            <hr />
+            <section class="section">
+                <h2>Contacts:</h2>
+                <p><b>Vladimir Ermukhanov</b></p>
+                <ul>
+                    <li>
+                        <p>
+                            <a href="mailto:ermuhanoff@gmail.com">ermuhanoff@gmail.com</a>
+                        </p>
+                    </li>
+                    <li>
+                        <p><a href="tel:+79952028114">+79952028114</a></p>
+                    </li>
+                    <li>
+                        <p>
+                            <a href="https://vk.com/woksel" target="_blank" rel="noopener noreferrer">VK</a>
+                        </p>
+                    </li>
+                </ul>
+            </section>
+            <section class="section">
+                <h2>About me</h2>
+                <p>
+                    <i>Something about me...</i>
+                </p>
+                <p>
+                <h4>Programming skills:</h4>
+                <ul>
+                    <li>JS</li>
+                    <li>JAVA</li>
+                    <li>C#</li>
+                </ul>
+                </p>
+            </section>
+            <section class="section">
+                <h2>Education</h2>
+                <p>September 2017 - July 2021, <b>Yuri Gagarin State Technical
+                University of Saratov</b></p>
+            </section>
+            <section class="section">
+                <h2>Experience</h2>
+                <p>
+                    <i>Many many projects...</i>
+                </p>
+            </section>
+            <section class="section">
+                <h2>Languages</h2>
+                <p>
+                    English - B2
+                </p>
+            </section>
+        </article>
+    </main>
+    <script>
+     window.onerror = function (msg, url, lineNo, columnNo, error) {
+      window.parent.postMessage(
+              {
+                  source: 'iframe',
+                  message: ["error", {msg, url, lineNo, columnNo, error}],
+              },
+              '*'
+          );
+        return false;
+      }
+      const _log = console.log;
+      const _error = console.error;
+      const _dir = console.dir;
+      console.log = function (...rest) {
+
+          const STACK_LINE_REGEX = /(\d+):(\d+)\)?$/;
+
+          let err;
+          let line;
+          let stacks;
+
+          try {
+            throw new Error();
+          } catch(e) {
+            err = e;
+          }
+
+          try {
+            stacks = err.stack.split('\n');
+            
+            line = STACK_LINE_REGEX.exec(stacks[2]);
+            return this(`[${line}]`, ...log);
+          } catch (err) {
+            line = 0;
+          }
+
+          stacks = stacks[2].split(" ");
+          stacks = stacks[stacks.length - 1].split("/");
+          stacks = stacks[stacks.length - 1].split(":").slice(0, 2);
+          
+
+          window.parent.postMessage(
+              {
+                  source: 'iframe',
+                  message: ["log", stacks = stacks.join(":"), ...(rest.map((item) => JSON.parse(JSON.stringify(item))))],
+              },
+              '*'
+          );
+          _log.apply(console, arguments);
+      };
+      console.error = function (...rest) {
+          window.parent.postMessage(
+              {
+                  source: 'iframe',
+                  message: ["error", ...rest],
+              },
+              '*'
+          );
+          _error.apply(console, arguments);
+      };
+      console.dir = function (...rest) {
+          window.parent.postMessage(
+              {
+                  source: 'iframe',
+                  message: ["dir", ...rest],
+              },
+              '*'
+          );
+          _dir.apply(console, arguments);
+      };
+    </script>
+    <script src="/static/scripts/index.js"></script>
+  </body>
+</html>
