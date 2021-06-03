@@ -26,6 +26,9 @@ const translations = {};
 
 // const url = generateRandomKey();
 const url = "86dd7a27421";
+
+createProject(url);
+
 const files = readDir(dirPath + "/" + url);
 
 files.then((data) => (translations[url].files = data));
@@ -371,6 +374,21 @@ app.get("/:translationID/closednotices", (request, response) => {
   }
 });
 
+app.post("/:translationID/stoptranslation", (request, response) => {
+  try {
+    const url = request.params["translationID"];
+
+    deleteDir(url);
+
+    delete translations[url];
+
+    response.sendStatus(200);
+  } catch (err) {
+    response.sendStatus(404);
+  }
+});
+
+
 app.get("/:translationID/viewtype", (request, response) => {
   const url = request.params["translationID"];
   const t = request.cookies.token;
@@ -590,7 +608,7 @@ io.on("connection", (socket) => {
   // });
 });
 
-httpServer.listen(process.env.PORT || 3000);
+httpServer.listen(4000);
 
 async function readDir(dirPath) {
   let dirInfo = [];
@@ -729,7 +747,7 @@ function createProject(projectname) {
         </article>
     </main>
     <script >
-        window.onerror=function(o,e,r,s,n){return window.parent.postMessage({source:"iframe",message:["error",{msg:o,url:e,lineNo:r,columnNo:s,error:n}]},"*"),!1};const _log=console.log,_error=console.error,_dir=console.dir;console.log=function(...o){const e=/(d+):(d+)?$/;let r,s,n;try{throw new Error}catch(o){r=o}try{return n=r.stack.split("\n"),this("["+e.exec(n[2])+"]",...log)}catch(r){s=0}n=(n=(n=n[2].split(" "))[n.length-1].split("/"))[n.length-1].split(":").slice(0,2),window.parent.postMessage({source:"iframe",message:["log",n=n.join(":"),...o.map(o=>JSON.parse(JSON.stringify(o)))]},"*"),_log.apply(console,arguments)},console.error=function(...o){window.parent.postMessage({source:"iframe",message:["error",...o]},"*"),_error.apply(console,arguments)},console.dir=function(...o){window.parent.postMessage({source:"iframe",message:["dir",...o]},"*"),_dir.apply(console,arguments)};
+        window.onerror=function(o,e,r,s,n){return window.parent.postMessage({source:"iframe",message:["error",{msg:o,url:e,lineNo:r,columnNo:s,error:n}]},"*"),!1};const _log=console.log,_error=console.error,_dir=console.dir;console.log=function(...o){const e=/(\d+):(\d+)\)?$/;let r,s,n;try{throw new Error}catch(o){r=o}try{return n=r.stack.split("\n"),this("["+e.exec(n[2])+"]",...log)}catch(r){s=0}n=(n=(n=n[2].split(" "))[n.length-1].split("/"))[n.length-1].split(":").slice(0,2),window.parent.postMessage({source:"iframe",message:["log",n=n.join(":"),...o.map(o=>JSON.parse(JSON.stringify(o)))]},"*"),_log.apply(console,arguments)},console.error=function(...o){window.parent.postMessage({source:"iframe",message:["error",...o]},"*"),_error.apply(console,arguments)},console.dir=function(...o){window.parent.postMessage({source:"iframe",message:["dir",...o]},"*"),_dir.apply(console,arguments)};
     </script>
     <script src="/static/${projectname}/scripts/index.js"></script>
   </body>
