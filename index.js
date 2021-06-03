@@ -608,7 +608,7 @@ io.on("connection", (socket) => {
   // });
 });
 
-httpServer.listen(4000);
+httpServer.listen(process.env.PORT || 3000);
 
 async function readDir(dirPath) {
   let dirInfo = [];
